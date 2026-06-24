@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Locker;
 use Illuminate\Http\Request;
+use App\Models\Rental;
+use Carbon\Carbon;
 
 class LockerController extends Controller
 {
@@ -95,4 +97,51 @@ class LockerController extends Controller
         // Kembali ke dashboard
         return redirect()->route('dashboard');
     }
+    public function sewa(Request $request, Locker $locker)
+{
+    $request->validate([
+        'nama_penyewa' => 'required|string|max:255',
+        'durasi_jam'   => 'required|integer|min:1',
+    ]);
+
+    // Update status loker
+    $locker->status = 'occupied'; 
+    $locker->save();
+
+    // Tambahkan user_id di sini
+    \App\Models\Rental::create([
+        'locker_id'   => $locker->id,
+        'user_id'     => auth()->id(), // <--- TAMBAHKAN BARIS INI
+        'renter_name' => $request->nama_penyewa,
+        'status'      => 'active', 
+        'end_time'    => \Carbon\Carbon::now()->addHours((int) $request->durasi_jam),
+    ]);
+
+    return redirect()->route('dashboard');
 }
+    public function selesai(\App\Models\Rental $rental)
+    {
+        // 1. Ambil loker yang terkait dengan rental ini
+        $locker = $rental->locker;
+
+        // 2. Ubah status loker kembali menjadi tersedia
+        $locker->status = 'available'; 
+        $locker->save();
+
+        // 3. Ubah status rental menjadi selesai
+        $rental->status = 'completed';
+        $rental->save();
+
+        return redirect()->route('dashboard')->with('success', 'Loker berhasil dikembalikan!');
+    }
+    public function simpanBiometrik()
+    {
+        $user = auth()->user();
+        
+        // Simulasikan bahwa sistem telah merekam wajah
+        $user->face_registered = true;
+        $user->save();
+
+        return redirect()->route('dashboard')->with('success', 'Biometrik wajah berhasil didaftarkan!');
+    }
+} 

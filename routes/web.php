@@ -12,6 +12,27 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+    $user = auth()->user();
+
+    // ==========================================
+    // LOGIKA UNTUK MAHASISWA
+    // ==========================================
+    if ($user->role === 'student') {
+        // Ambil HANYA 1 loker yang sedang dia sewa saat ini (jika ada)
+        $myRental = Rental::with('locker')
+            ->where('user_id', $user->id)
+            ->where('status', 'active')
+            ->first();
+
+        // Ambil data loker tersedia agar mahasiswa bisa memilih sendiri
+        $lokersTersedia = Locker::where('status', 'available')->get();
+
+        return view('dashboard', compact('myRental', 'lokersTersedia'));
+    }
+
+    // ==========================================
+    // LOGIKA UNTUK ADMIN
+    // ==========================================
     // 1. Ambil Loker yang masih tersedia
     $lokersTersedia = Locker::where('status', 'available')->get();
     
@@ -32,10 +53,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // Rute Loker
+    // Rute Loker (Akses CRUD Admin)
     Route::post('/loker/simpan', [LockerController::class, 'store'])->name('loker.store');
-    Route::put('/loker/{locker}', [LockerController::class, 'update'])->name('loker.update'); // Untuk proses edit
-    Route::delete('/loker/{locker}', [LockerController::class, 'destroy'])->name('loker.destroy'); // Untuk proses hapus
+    Route::put('/loker/{locker}', [LockerController::class, 'update'])->name('loker.update');
+    Route::delete('/loker/{locker}', [LockerController::class, 'destroy'])->name('loker.destroy');
+    
+    // Rute Penyewaan Loker (Bisa diakses Mahasiswa dan Admin)
+    Route::post('/loker/{locker}/sewa', [LockerController::class, 'sewa'])->name('loker.sewa');
+
+    // Rute Selesaikan Sewa
+    Route::put('/rental/{rental}/selesai', [LockerController::class, 'selesai'])->name('rental.selesai');
+    
+    Route::post('/biometrik/simpan', [LockerController::class, 'simpanBiometrik'])->name('biometrik.simpan');
 });
 
 require __DIR__.'/auth.php';

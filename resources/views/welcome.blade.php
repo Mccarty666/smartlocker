@@ -3,73 +3,56 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SmartLocker - Peminjaman Loker Kampus</title>
-    
+    <title>SmartLocker - Penyimpanan Aman</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="antialiased min-h-screen bg-[#0A4DD6] text-white font-sans selection:bg-yellow-400 selection:text-blue-900">
-
-    <nav class="container mx-auto px-6 py-8 flex items-center justify-between">
-        <div class="border-4 border-yellow-400 px-4 py-1">
-            <h1 class="text-3xl font-extrabold tracking-widest uppercase">
+<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+    
+    <nav class="bg-[#0A4DD6] text-white p-6 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-black text-white tracking-widest uppercase">
                 Smart<span class="text-yellow-400">Locker</span>
             </h1>
-        </div>
-
-        <div class="hidden md:flex space-x-8 text-yellow-400 font-bold text-sm uppercase tracking-wide">
-            <a href="#" class="hover:text-white transition">Home</a>
-            <a href="#" class="hover:text-white transition">Tentang</a>
-            <a href="#" class="hover:text-white transition">Cara Kerja</a>
-            <a href="#" class="hover:text-white transition">F.A.Q</a>
+            <div class="space-x-6 font-bold text-sm hidden md:flex items-center">
+                <a href="#" class="text-yellow-400 hover:text-white transition">Home</a>
+                <a href="#" class="hover:text-yellow-400 transition">Tentang</a>
+                <a href="#" class="hover:text-yellow-400 transition">Cara Kerja</a>
+                <a href="#" class="hover:text-yellow-400 transition">F.A.Q</a>
+                <span class="text-blue-300">|</span>
+                
+                @auth
+                    <a href="{{ url('/dashboard') }}" class="bg-yellow-400 text-[#0A4DD6] px-5 py-2.5 rounded-full hover:bg-yellow-300 transition shadow-sm">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="hover:text-yellow-400 transition">Login</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="bg-white text-[#0A4DD6] px-5 py-2.5 rounded-full hover:bg-gray-100 transition shadow-sm">Register</a>
+                    @endif
+                @endauth
+            </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-6 mt-12 md:mt-24 flex flex-col md:flex-row items-center relative">
-        
-        <div class="md:w-1/2 z-10 text-center md:text-left">
-            <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
-                Ruang penyimpanan aman, <br>
-                <span class="text-yellow-400">di lingkungan kampus Anda.</span>
+    <main class="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 bg-gradient-to-b from-blue-50 to-white">
+        <div class="max-w-3xl">
+            <h2 class="text-5xl md:text-6xl font-black text-[#0A4DD6] mb-6 leading-tight drop-shadow-sm">
+                Ruang penyimpanan aman, <br> <span class="text-gray-800">di lingkungan kampus Anda.</span>
             </h2>
-            <p class="text-lg md:text-xl text-blue-100 mb-10 max-w-lg mx-auto md:mx-0 opacity-90">
-                Temui SmartLocker, layanan peminjaman loker berbasis Face Recognition untuk menjaga barang berharga Anda dengan aman dan praktis.
+            <p class="text-lg md:text-xl text-gray-600 mb-10 font-medium leading-relaxed">
+                Temui SmartLocker, layanan peminjaman loker berbasis <span class="text-[#0A4DD6] font-bold">Face Recognition</span> untuk menjaga barang berharga Anda dengan aman dan praktis.
             </p>
-
-            <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="px-8 py-3 bg-yellow-400 text-[#0A4DD6] font-bold rounded-full shadow-lg hover:bg-yellow-300 transform hover:scale-105 transition duration-300 w-full sm:w-auto text-center">
-                            Ke Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" class="px-8 py-3 bg-[#A855F7] text-white font-bold rounded-full shadow-lg hover:bg-[#9333EA] transform hover:scale-105 transition duration-300 w-full sm:w-auto text-center tracking-wider">
-                            LOGIN
-                        </a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="px-8 py-3 bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold rounded-full hover:bg-yellow-400 hover:text-[#0A4DD6] transform hover:scale-105 transition duration-300 w-full sm:w-auto text-center tracking-wider">
-                                REGISTER
-                            </a>
-                        @endif
-                    @endauth
-                @endif
-            </div>
-        </div>
-
-        <div class="md:w-1/2 mt-16 md:mt-0 relative flex justify-center items-center">
-            <div class="absolute bg-white w-[300px] h-[300px] md:w-[500px] md:h-[500px]" style="border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;"></div>
             
-            <div class="relative z-10 grid grid-cols-2 gap-4 transform rotate-3">
-                <div class="bg-yellow-400 w-24 h-32 md:w-32 md:h-48 rounded shadow-xl flex items-center justify-center border-l-8 border-[#0A4DD6]">
-                    <span class="text-4xl md:text-6xl font-black text-[#0A4DD6] opacity-80">01</span>
-                </div>
-                <div class="bg-yellow-400 w-24 h-32 md:w-32 md:h-48 rounded shadow-xl flex items-center justify-center border-l-8 border-[#0A4DD6] mt-8">
-                    <span class="text-4xl md:text-6xl font-black text-[#0A4DD6] opacity-80">02</span>
-                </div>
+            <div class="flex justify-center gap-4">
+                @auth
+                    <a href="{{ url('/dashboard') }}" class="bg-yellow-400 text-[#0A4DD6] px-8 py-4 rounded-full text-lg font-extrabold shadow-xl hover:bg-yellow-300 transform hover:-translate-y-1 transition-all flex items-center gap-2">
+                        Ke Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="bg-yellow-400 text-[#0A4DD6] px-8 py-4 rounded-full text-lg font-extrabold shadow-xl hover:bg-yellow-300 transform hover:-translate-y-1 transition-all flex items-center gap-2">
+                        Mulai Sekarang
+                    </a>
+                @endauth
             </div>
         </div>
-
     </main>
-
 </body>
 </html>
