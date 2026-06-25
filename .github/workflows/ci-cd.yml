@@ -1,0 +1,78 @@
+name: CI/CD Laravel
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ============================================
+  # JOB 1: Build, Lint & Test (CI)
+  # ============================================
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # --- Checkout ---
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # --- Setup PHP 8.2 ---
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, intl, zip, sqlite, pdo_sqlite
+
+      # --- Setup .env ---
+      - name: Copy .env
+        run: cp .env.example .env
+
+      # --- Install Composer ---
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      # --- Generate Key ---
+      - name: Generate app key
+        run: php artisan key:generate
+
+      # --- Setup Node.js ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # --- Install & Build Frontend ---
+      - name: Install & Build frontend
+        run: |
+          npm ci
+          npm run build
+
+      # --- Lint PHP ---
+      - name: Lint PHP (Laravel Pint)
+        run: ./vendor/bin/pint --test
+
+      # --- Run PHPUnit Tests ---
+      - name: Run PHPUnit Tests
+        run: php artisan test
+
+  # ============================================
+  # JOB 2: Deploy (CD) — Simulasi
+  # ============================================
+  deploy:
+    name: Deploy (Simulasi)
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Simulasi Deploy
+        run: |
+          echo "===================================="
+          echo "Semua test lulus!"
+          echo "Build frontend siap deploy"
+          echo "Deploy ke production server..."
+          echo "(Tambahkan SSH deploy steps di sini)"
+          echo "===================================="
+
