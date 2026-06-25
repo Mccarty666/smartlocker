@@ -10,16 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::table('rentals', function (Blueprint $table) {
-        $table->string('renter_name')->after('locker_id');
-    });
-}
+    {
+        Schema::table('rentals', function (Blueprint $table) {
+            $table->string('renter_name')->after('locker_id');
+        });
+    }
 
-public function down(): void
-{
-    Schema::table('rentals', function (Blueprint $table) {
-        $table->dropColumn('renter_name');
-    });
-}
+    public function down(): void
+    {
+        Schema::table('rentals', function (Blueprint $table) {
+            $table->dropColumn('renter_name');
+        });
+    }
 };
