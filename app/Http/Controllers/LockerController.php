@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
 use App\Models\Locker;
-use Illuminate\Http\Request;
 use App\Models\Rental;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class LockerController extends Controller
 {
@@ -120,7 +121,7 @@ class LockerController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function selesai(\App\Models\Rental $rental)
+    public function selesai(Rental $rental)
     {
         // 1. Ambil loker yang terkait dengan rental ini
         $locker = $rental->locker;

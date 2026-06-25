@@ -31,5 +31,3 @@ class SecurityHeadersTest extends TestCase
         $this->assertEquals("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';", $response->headers->get('Content-Security-Policy'));
     }
 }
-
-
