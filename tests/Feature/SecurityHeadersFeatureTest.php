@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class SecurityHeadersFeatureTest extends TestCase
@@ -19,4 +18,5 @@ class SecurityHeadersFeatureTest extends TestCase
         $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     }
 }
+
 

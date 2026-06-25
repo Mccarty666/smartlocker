@@ -101,25 +101,24 @@ class LockerController extends Controller
     public function sewa(Request $request, Locker $locker)
     {
         $request->validate([
-        'nama_penyewa' => 'required|string|max:255',
-        'durasi_jam'   => 'required|integer|min:1',
-    ]);
+            'nama_penyewa' => 'required|string|max:255',
+            'durasi_jam'   => 'required|integer|min:1',
+        ]);
 
-    // Update status loker
-    $locker->status = 'occupied'; 
-    $locker->save();
+        // Update status loker
+        $locker->status = 'occupied';
+        $locker->save();
 
-    // Tambahkan user_id di sini
-    \App\Models\Rental::create([
-        'locker_id'   => $locker->id,
-        'user_id'     => auth()->id(), // <--- TAMBAHKAN BARIS INI
-        'renter_name' => $request->nama_penyewa,
-        'status'      => 'active', 
-        'end_time'    => \Carbon\Carbon::now()->addHours((int) $request->durasi_jam),
-    ]);
+        Rental::create([
+            'locker_id'   => $locker->id,
+            'user_id'     => auth()->id(),
+            'renter_name' => $request->nama_penyewa,
+            'status'      => 'active',
+            'end_time'    => Carbon::now()->addHours((int) $request->durasi_jam),
+        ]);
 
-    return redirect()->route('dashboard');
-}
+        return redirect()->route('dashboard');
+    }
 
     public function selesai(\App\Models\Rental $rental)
     {
