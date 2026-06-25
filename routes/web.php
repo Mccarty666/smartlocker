@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LockerController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Models\Locker;
 use App\Models\Rental;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,9 +41,9 @@ Route::get('/dashboard', function () {
     
     // 3. Ambil Penyewaan yang selesai HARI INI
     $rentalsSelesai = Rental::with('locker')
-                            ->where('status', 'completed')
-                            ->whereDate('updated_at', Carbon::today())
-                            ->get();
+        ->where('status', 'completed')
+        ->whereDate('updated_at', Carbon::today())
+        ->get();
 
     return view('dashboard', compact('lokersTersedia', 'rentalsAktif', 'rentalsSelesai'));
 })->middleware(['auth', 'verified'])->name('dashboard');

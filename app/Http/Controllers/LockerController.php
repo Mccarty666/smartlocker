@@ -97,9 +97,10 @@ class LockerController extends Controller
         // Kembali ke dashboard
         return redirect()->route('dashboard');
     }
+
     public function sewa(Request $request, Locker $locker)
-{
-    $request->validate([
+    {
+        $request->validate([
         'nama_penyewa' => 'required|string|max:255',
         'durasi_jam'   => 'required|integer|min:1',
     ]);
@@ -119,6 +120,7 @@ class LockerController extends Controller
 
     return redirect()->route('dashboard');
 }
+
     public function selesai(\App\Models\Rental $rental)
     {
         // 1. Ambil loker yang terkait dengan rental ini
@@ -134,6 +136,7 @@ class LockerController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Loker berhasil dikembalikan!');
     }
+
     public function simpanBiometrik()
     {
         $user = auth()->user();

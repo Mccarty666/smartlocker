@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class SecurityHeadersTest extends TestCase
@@ -31,3 +31,4 @@ class SecurityHeadersTest extends TestCase
         $this->assertEquals("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';", $response->headers->get('Content-Security-Policy'));
     }
 }
+
