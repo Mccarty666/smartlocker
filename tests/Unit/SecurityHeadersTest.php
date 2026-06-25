@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class SecurityHeadersTest extends TestCase
@@ -14,12 +14,12 @@ class SecurityHeadersTest extends TestCase
      */
     public function test_it_adds_security_headers(): void
     {
-        $middleware = new SecurityHeaders();
+        $middleware = new SecurityHeaders;
         $request = Request::create('/', 'GET');
 
         // Create a dummy next closure that returns a blank response
         $next = function () {
-            return new Response();
+            return new Response;
         };
 
         $response = $middleware->handle($request, $next);

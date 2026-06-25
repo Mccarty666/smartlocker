@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Locker;
-use Illuminate\Http\Request;
 use App\Models\Rental;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class LockerController extends Controller
 {
@@ -14,7 +16,7 @@ class LockerController extends Controller
      */
     public function index()
     {
-        // Nanti kita akan menggunakan fungsi ini untuk mengambil data 
+        // Nanti kita akan menggunakan fungsi ini untuk mengambil data
         // dari database dan menampilkannya di papan Kanban Dashboard.
     }
 
@@ -34,13 +36,13 @@ class LockerController extends Controller
         // 1. Validasi data yang dikirim dari form modal
         $request->validate([
             'nomor_loker' => 'required|string|max:255',
-            'lokasi'      => 'required|string|max:255',
-            // Catatan: Jika nanti kamu menambahkan kolom 'ukuran' di database, 
+            'lokasi' => 'required|string|max:255',
+            // Catatan: Jika nanti kamu menambahkan kolom 'ukuran' di database,
             // kamu bisa menangkap datanya juga di sini.
         ]);
 
         // 2. Simpan data baru ke dalam tabel lockers
-        $lokerBaru = new Locker();
+        $lokerBaru = new Locker;
         $lokerBaru->locker_number = $request->nomor_loker;
         $lokerBaru->location = $request->lokasi;
         $lokerBaru->status = 'available'; // Default status saat loker baru didaftarkan
@@ -74,7 +76,7 @@ class LockerController extends Controller
         // 1. Validasi data
         $request->validate([
             'nomor_loker' => 'required|string|max:255',
-            'lokasi'      => 'required|string|max:255',
+            'lokasi' => 'required|string|max:255',
         ]);
 
         // 2. Update data di database
@@ -97,35 +99,36 @@ class LockerController extends Controller
         // Kembali ke dashboard
         return redirect()->route('dashboard');
     }
+
     public function sewa(Request $request, Locker $locker)
-{
-    $request->validate([
-        'nama_penyewa' => 'required|string|max:255',
-        'durasi_jam'   => 'required|integer|min:1',
-    ]);
+    {
+        $request->validate([
+            'nama_penyewa' => 'required|string|max:255',
+            'durasi_jam' => 'required|integer|min:1',
+        ]);
 
-    // Update status loker
-    $locker->status = 'occupied'; 
-    $locker->save();
+        // Update status loker
+        $locker->status = 'occupied';
+        $locker->save();
 
-    // Tambahkan user_id di sini
-    \App\Models\Rental::create([
-        'locker_id'   => $locker->id,
-        'user_id'     => auth()->id(), // <--- TAMBAHKAN BARIS INI
-        'renter_name' => $request->nama_penyewa,
-        'status'      => 'active', 
-        'end_time'    => \Carbon\Carbon::now()->addHours((int) $request->durasi_jam),
-    ]);
+        Rental::create([
+            'locker_id' => $locker->id,
+            'user_id' => auth()->id(),
+            'renter_name' => $request->nama_penyewa,
+            'status' => 'active',
+            'end_time' => Carbon::now()->addHours((int) $request->durasi_jam),
+        ]);
 
-    return redirect()->route('dashboard');
-}
-    public function selesai(\App\Models\Rental $rental)
+        return redirect()->route('dashboard');
+    }
+
+    public function selesai(Rental $rental)
     {
         // 1. Ambil loker yang terkait dengan rental ini
         $locker = $rental->locker;
 
         // 2. Ubah status loker kembali menjadi tersedia
-        $locker->status = 'available'; 
+        $locker->status = 'available';
         $locker->save();
 
         // 3. Ubah status rental menjadi selesai
@@ -134,14 +137,15 @@ class LockerController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Loker berhasil dikembalikan!');
     }
+
     public function simpanBiometrik()
     {
         $user = auth()->user();
-        
+
         // Simulasikan bahwa sistem telah merekam wajah
         $user->face_registered = true;
         $user->save();
 
         return redirect()->route('dashboard')->with('success', 'Biometrik wajah berhasil didaftarkan!');
     }
-} 
+}

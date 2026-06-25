@@ -10,12 +10,12 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-   {
-       Schema::table('users', function (Blueprint $table) {
-           // Default kita set 'admin' agar akun Riandra saat ini tetap jadi admin
-           $table->string('role')->default('admin')->after('email'); 
-       });
-   }
+    {
+        Schema::table('users', function (Blueprint $table) {
+            // Default kita set 'admin' agar akun Riandra saat ini tetap jadi admin
+            $table->string('role')->default('admin')->after('email');
+        });
+    }
 
     /**
      * Reverse the migrations.

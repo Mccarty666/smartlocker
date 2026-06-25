@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lockers', function (Blueprint $table) {
-        $table->id();
-        $table->string('locker_number');
-        $table->string('location'); // Misalnya: Gedung A Lantai 1
-        $table->enum('status', ['available', 'occupied', 'maintenance'])->default('available');
-        $table->timestamps();
+            $table->id();
+            $table->string('locker_number');
+            $table->string('location'); // Misalnya: Gedung A Lantai 1
+            $table->enum('status', ['available', 'occupied', 'maintenance'])->default('available');
+            $table->timestamps();
         });
     }
 
